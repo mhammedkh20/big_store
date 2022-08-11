@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Traits;
+namespace App\Traits;
 
 trait GeneralTrait
 {
@@ -19,7 +19,7 @@ trait GeneralTrait
 
 
 
-    public function getResponse($message, $success, $data)
+    public function getResponse($message, $success=true, $data)
     {
         return [
             'message' => $message,
@@ -28,7 +28,7 @@ trait GeneralTrait
         ];
     }
 
-    public function getResponseAuth($message, $success)
+    public function getResponseFail($message, $success)
     {
         return [
             'message' => $message,
@@ -45,4 +45,17 @@ trait GeneralTrait
             'token' => $token,
         ];
     }
+
+    public function getErrorIfAny($data,$ruls){
+
+        $validate = Validator($data, $ruls);
+
+        $message = $this->getMessageError($validate);
+
+        if ($validate->fails()) {
+            return response($this->getResponseFail($message, false), 422);
+        }
+    }
+
+    
 }

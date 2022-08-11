@@ -10,5 +10,9 @@ return [
     'verificationSent' => 'تم إرسال رابط التحقق',
     'emailNotFound' => 'هذا البريد الإلكتروني غير موجود لقاعدة البيانات الخاصة بي',
     'emailVerified' => 'تم التحقق من البريد الإلكتروني',
+    'operationSuccessfully' => 'تمت العملية بنجاح !',
+    'somethingWrong' => 'حدث خطأ ما !',
+    'matchingData' => 'يوجد بيانات متطابة في قاعدة بياناتنا',
+
 
 ];

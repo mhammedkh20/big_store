@@ -4,10 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Store extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    public $hidden = [
+        'deleted_at'
+    ];
+
+    protected $fillable = [
+        'id',
+        'store_name',
+        'store_description',
+        'phone',
+        'street',
+        'city_id',
+        'location_latitude',
+        'location_longitude',
+        'state',
+    ];
 
     // has relation
     public function staffs()

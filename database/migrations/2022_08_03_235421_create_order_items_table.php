@@ -21,6 +21,8 @@ return new class extends Migration
             $table->double('price',5,2);
             $table->double('discount',5,2)->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

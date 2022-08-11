@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('rating_id')->constrained('ratings');
             $table->text('comment');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

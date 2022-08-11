@@ -4,11 +4,36 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    public $fillable = [
+        'category_id',
+        'store_id',
+        'brand_id',
+        'product_name',
+        'product_describtion',
+        'price',
+        'discount',
+    ];
+
+
+    public $hidden = [
+        'deleted_at'
+    ];
+
+    public function productVariationOptions()
+    {
+        return $this->hasOneThrough(
+            ProductVariationsOptions::class,
+            ProductsVariations::class,
+            'product_id',
+            'product_var_id',
+        );
+    }
 
     public function productsVariations()
     {

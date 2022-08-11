@@ -18,9 +18,10 @@ return new class extends Migration
             $table->foreignId('store_id')->constrained('stores')->cascadeOnDelete();
             $table->foreignId('manager_id')->constrained('managers')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users');
-
             $table->boolean('active');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->string('image_url');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

@@ -31,7 +31,7 @@ class AuthController extends Controller
         $message = $this->getMessageError($validate);
 
         if ($validate->fails()) {
-            return response($this->getResponseAuth($message, false), 422);
+            return response($this->getResponseFail($message, false), 422);
         }
       
         User::create([
@@ -42,7 +42,7 @@ class AuthController extends Controller
             'is_admin' => $request['is_admin'],
         ]);
 
-        return response($this->getResponseAuth(__('my_keywords.createdAccount'), true), 201);
+        return response($this->getResponseFail(__('my_keywords.createdAccount'), true), 201);
     }
 
     public function login(Request $request)
@@ -57,7 +57,7 @@ class AuthController extends Controller
         $message = $this->getMessageError($validate);
 
         if ($validate->fails()) {
-            return response($this->getResponseAuth($message, false), 422);
+            return response($this->getResponseFail($message, false), 422);
         }
 
         // Check email
@@ -65,11 +65,11 @@ class AuthController extends Controller
 
         // Check password
         if (!$user || !Hash::check($request['password'], $user->password)) {
-            return response($this->getResponseAuth(__('my_keywords.invaledLogin'), false), 401);
+            return response($this->getResponseFail(__('my_keywords.invaledLogin'), false), 401);
         }
 
         if ($user['email_verified_at'] == null) {
-            return response($this->getResponseAuth(__('my_keywords.emailNotVerifed'), false), 403);
+            return response($this->getResponseFail(__('my_keywords.emailNotVerifed'), false), 403);
         }
 
         $token = $user->createToken('myAppToken')->plainTextToken;
@@ -101,7 +101,7 @@ class AuthController extends Controller
         $message = $this->getMessageError($validate);
 
         if ($validate->fails()) {
-            return response($this->getResponseAuth($message, false), 422);
+            return response($this->getResponseFail($message, false), 422);
         }
 
         $status = Password::sendResetLink(
@@ -110,10 +110,10 @@ class AuthController extends Controller
 
 
         if ($status == Password::RESET_LINK_SENT) {
-            return response($this->getResponseAuth(__($status), true), 200);
+            return response($this->getResponseFail(__($status), true), 200);
         }
 
-        return response($this->getResponseAuth(trans($status), false), 422);
+        return response($this->getResponseFail(trans($status), false), 422);
     }
 
     public function reset(Request $request)
@@ -129,7 +129,7 @@ class AuthController extends Controller
         $message = $this->getMessageError($validate);
 
         if ($validate->fails()) {
-            return response($this->getResponseAuth($message, false), 422);
+            return response($this->getResponseFail($message, false), 422);
         }
 
 
@@ -148,10 +148,10 @@ class AuthController extends Controller
         );
 
         if ($status == Password::PASSWORD_RESET) {
-            return response($this->getResponseAuth(__($status), true), 200);
+            return response($this->getResponseFail(__($status), true), 200);
         }
 
-        return response($this->getResponseAuth(trans($status), false), 422);
+        return response($this->getResponseFail(trans($status), false), 422);
     }
 
     public function sendVerificationEmail(Request $request)
@@ -165,7 +165,7 @@ class AuthController extends Controller
         $message = $this->getMessageError($validate);
 
         if ($validate->fails()) {
-            return response($this->getResponseAuth($message, false), 422);
+            return response($this->getResponseFail($message, false), 422);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -173,14 +173,14 @@ class AuthController extends Controller
         if ($user != null) {
 
             if ($user['email_verified_at'] != null) {
-                return response($this->getResponseAuth(__('my_keywords.accountVerified'), true), 200);
+                return response($this->getResponseFail(__('my_keywords.accountVerified'), true), 200);
             }
 
             $user->sendEmailVerificationNotification();
 
-            return response($this->getResponseAuth(__('my_keywords.verificationSent'), true), 201);
+            return response($this->getResponseFail(__('my_keywords.verificationSent'), true), 201);
         } else {
-            return response($this->getResponseAuth(__('my_keywords.emailNotFound'), false), 403);
+            return response($this->getResponseFail(__('my_keywords.emailNotFound'), false), 403);
         }
     }
 
@@ -189,12 +189,12 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         // print($user);
         if ($user['email_verified_at'] != null) {
-            return response($this->getResponseAuth(__('my_keywords.accountVerified'), true), 200);
+            return response($this->getResponseFail(__('my_keywords.accountVerified'), true), 200);
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
-        return response($this->getResponseAuth(__('my_keywords.emailVerified'), true), 200);
+        return response($this->getResponseFail(__('my_keywords.emailVerified'), true), 200);
     }
 }

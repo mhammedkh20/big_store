@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders');
             $table->double('rating');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

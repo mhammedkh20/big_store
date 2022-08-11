@@ -4,11 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    public $fillable =[
+        'user_id',
+        'point_id',
+        'order_status',
+        'total_price',
+    ];
+
+    public $hidden =[
+        'deleted_at',
+    ];
 
 
     public function rating()

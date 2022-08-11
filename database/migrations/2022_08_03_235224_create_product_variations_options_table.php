@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('variation_option');
             $table->double('add_price');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

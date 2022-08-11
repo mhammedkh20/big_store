@@ -16,17 +16,16 @@ return new class extends Migration
         Schema::create('points', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users','id');
-
             $table->foreignId('city_id')->constrained('cities');
             $table->string('street');
             $table->string('place_detail');
-            $table->string('location_latitude');
-            $table->string('location_longitude');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->double('location_latitude');
+            $table->double('location_longitude');
+            $table->string('name');
             $table->string('phone');
-
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

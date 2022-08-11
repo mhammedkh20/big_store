@@ -4,11 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Point extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+
+    protected $fillable = [
+        'user_id',
+        'city_id',
+        'street',
+        'place_detail',
+        'location_latitude',
+        'location_longitude',
+        'name',
+        'phone',
+    ];
+
+    protected $hidden =[
+        'deleted_at'
+    ];
+
+    public $timestamps = true;
 
     public function orders()
     {

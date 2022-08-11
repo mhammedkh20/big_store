@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained('stores');
             $table->foreignId('user_id')->constrained('users');
-            $table->string('active');
+            $table->boolean('active');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

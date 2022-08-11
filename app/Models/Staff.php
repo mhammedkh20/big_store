@@ -4,12 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Staff extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        'store_id',
+        'user_id',
+        'manager_id',
+        'active'
+    ];
 
+    public $hidden = [
+        'deleted_at'
+    ];
 
     public function store()
     {

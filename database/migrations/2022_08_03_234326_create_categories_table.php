@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('category_icon');
             $table->foreignId('parent_id')->nullable()->constrained('categories','id')->onDelete('set null');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

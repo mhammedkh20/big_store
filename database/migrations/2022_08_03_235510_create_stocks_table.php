@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('store_id')->constrained('stores');
             $table->string('stock_name');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 
