@@ -8,11 +8,15 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemsController;
 use App\Http\Controllers\PointController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImagesController;
 use App\Http\Controllers\ProductVariationController;
 use App\Http\Controllers\ProductVariationOptionController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\StoreImagesController;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -105,4 +109,16 @@ Route::group(['middleware' => ['changeLanguage', 'checkPassword']], function () 
 
     // todo:: stock
     Route::resource('stock', StockController::class);
+
+    // todo:: store - images
+    Route::resource('store_images', StoreImagesController::class);
+
+    // todo:: product - images
+    Route::resource('product_images', ProductImagesController::class);
+
+    // todo:: rating
+    Route::resource('rating', RatingController::class);
+
+    // todo:: comment
+    Route::resource('comment', ConmmentController::class);
 });

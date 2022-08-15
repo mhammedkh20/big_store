@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Stock;
+use App\Models\Comment;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
-class StockController extends Controller
+class ConmmentController extends Controller
 {
+    
     use GeneralTrait;
 
     protected $ruls = [
-        'store_id' => 'required|numeric',
-        'stock_name' => 'required|string'
+        'rating_id' => 'required|numeric',
+        'user_id' => 'required|numeric',
+        'comment' => 'required|string',
     ];
 
     public function index()
     {
-        $result = Stock::with(['store'])->orderBy('id', 'desc')->simplePaginate();
+        $result = Comment::with(['user', 'rating'])->orderBy('id', 'desc')->simplePaginate();
 
         if ($result) {
             return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $result), 200);
@@ -48,14 +50,15 @@ class StockController extends Controller
             return $this->getErrorIfAny($request->all(), $this->ruls);
         }
 
-        $stock = new Stock();
-        $stock['store_id'] =  $request['store_id'];
-        $stock['stock_name'] =  $request['stock_name'];
+        $comment = new Comment();
+        $comment['rating_id'] =  $request['rating_id'];
+        $comment['user_id'] =  $request['user_id'];
+        $comment['comment'] =  $request['comment'];
 
-        $result = $stock->save();
+        $result = $comment->save();
 
         if ($result) {
-            return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $stock), 200);
+            return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $comment), 200);
         } else {
             return response($this->getResponse(__('my_keywords.somethingWrong'), false, null), 422);
         }
@@ -75,7 +78,7 @@ class StockController extends Controller
             return $this->getErrorIfAny(['id' => $id], $ruls);
         }
 
-        $result = Stock::with(['store'])->find($id);
+        $result = Comment::with(['user', 'rating'])->find($id);
 
         if ($result) {
             return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $result), 200);
@@ -108,14 +111,15 @@ class StockController extends Controller
             return $this->getErrorIfAny($request->all(), $this->ruls);
         }
 
-        $stock = Stock::find($id);
+        $comment = Comment::find($id);
 
         $result = null;
 
-        if ($stock != null) {
-            $result = $stock->update([
-                'stock_name' =>  $request['stock_name'],
-                'store_id' =>  $request['store_id'],
+        if ($comment != null) {
+            $result = $comment->update([
+                'rating_id' =>  $request['rating_id'],
+                'user_id' =>  $request['user_id'],
+                'comment' =>  $request['comment'],
             ]);
         }
 
@@ -140,11 +144,11 @@ class StockController extends Controller
             return $this->getErrorIfAny(['id' => $id], $ruls);
         }
 
-        $stock = Stock::find($id);
+        $comment = Comment::find($id);
         $result = null;
 
-        if ($stock) {
-            $result = $stock->delete();
+        if ($comment) {
+            $result = $comment->delete();
         }
 
         if ($result) {

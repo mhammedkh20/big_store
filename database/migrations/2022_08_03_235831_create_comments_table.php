@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rating_id')->constrained('ratings');
+            $table->foreignId('user_id')->constrained('users');
             $table->text('comment');
             $table->timestamps();
             $table->softDeletes();

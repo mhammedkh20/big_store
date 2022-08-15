@@ -10,6 +10,15 @@ class ProductImages extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $fillable =[
+        'image_url',
+        'product_id',
+    ];
+
+    public $hidden =[
+        'deleted_at'
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');

@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Stock;
+use App\Models\Rating;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
-class StockController extends Controller
+class RatingController extends Controller
 {
     use GeneralTrait;
 
+
     protected $ruls = [
-        'store_id' => 'required|numeric',
-        'stock_name' => 'required|string'
+        'product_id' => 'required|numeric',
+        'order_id' => 'required|numeric',
+        'user_id' => 'required|numeric',
+        'rating' => 'required|numeric',
     ];
 
     public function index()
     {
-        $result = Stock::with(['store'])->orderBy('id', 'desc')->simplePaginate();
+        $result = Rating::with(['user', 'comments'])->orderBy('id', 'desc')->simplePaginate();
 
         if ($result) {
             return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $result), 200);
@@ -48,14 +51,16 @@ class StockController extends Controller
             return $this->getErrorIfAny($request->all(), $this->ruls);
         }
 
-        $stock = new Stock();
-        $stock['store_id'] =  $request['store_id'];
-        $stock['stock_name'] =  $request['stock_name'];
+        $rating = new Rating();
+        $rating['product_id'] =  $request['product_id'];
+        $rating['order_id'] =  $request['order_id'];
+        $rating['user_id'] =  $request['user_id'];
+        $rating['rating'] =  $request['rating'];
 
-        $result = $stock->save();
+        $result = $rating->save();
 
         if ($result) {
-            return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $stock), 200);
+            return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $rating), 200);
         } else {
             return response($this->getResponse(__('my_keywords.somethingWrong'), false, null), 422);
         }
@@ -75,7 +80,7 @@ class StockController extends Controller
             return $this->getErrorIfAny(['id' => $id], $ruls);
         }
 
-        $result = Stock::with(['store'])->find($id);
+        $result = Rating::with(['user', 'comments'])->find($id);
 
         if ($result) {
             return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $result), 200);
@@ -108,14 +113,16 @@ class StockController extends Controller
             return $this->getErrorIfAny($request->all(), $this->ruls);
         }
 
-        $stock = Stock::find($id);
+        $rating = Rating::find($id);
 
         $result = null;
 
-        if ($stock != null) {
-            $result = $stock->update([
-                'stock_name' =>  $request['stock_name'],
-                'store_id' =>  $request['store_id'],
+        if ($rating != null) {
+            $result = $rating->update([
+                'product_id' =>  $request['product_id'],
+                'order_id' =>  $request['order_id'],
+                'user_id' =>  $request['user_id'],
+                'rating' =>  $request['rating'],
             ]);
         }
 
@@ -140,11 +147,11 @@ class StockController extends Controller
             return $this->getErrorIfAny(['id' => $id], $ruls);
         }
 
-        $stock = Stock::find($id);
+        $rating = Rating::find($id);
         $result = null;
 
-        if ($stock) {
-            $result = $stock->delete();
+        if ($rating) {
+            $result = $rating->delete();
         }
 
         if ($result) {

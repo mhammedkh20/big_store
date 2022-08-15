@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Stock;
+use App\Models\StoreImages;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
-class StockController extends Controller
+class StoreImagesController extends Controller
 {
     use GeneralTrait;
 
     protected $ruls = [
         'store_id' => 'required|numeric',
-        'stock_name' => 'required|string'
     ];
 
     public function index()
     {
-        $result = Stock::with(['store'])->orderBy('id', 'desc')->simplePaginate();
+        $result = StoreImages::with(['store'])->orderBy('id', 'desc')->simplePaginate();
 
         if ($result) {
             return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $result), 200);
@@ -36,6 +35,35 @@ class StockController extends Controller
         //
     }
 
+
+    public function uploadImages($pictures_available_upload, $store_id)
+    {
+        $number_images_success_uploded = 0;
+        $images_urls = array();
+        for ($i = 0; $i < count($pictures_available_upload); $i++) {
+
+            $image = $pictures_available_upload[$i];
+
+            $path = config('paths.storage_path') .
+                $image->store(config('paths.store_image_path'), 'public');
+
+            //store image file into directory and db
+            $store_images = new StoreImages();
+            $store_images['store_id'] = $store_id;
+            $store_images['image_url'] = $path;
+            $result = $store_images->save();
+            if ($result) {
+                $images_urls[$i] = $path;
+                $number_images_success_uploded = $number_images_success_uploded + 1;
+            }
+        }
+        return [
+            'number_images_success_uploded' => $number_images_success_uploded,
+            'images_urls' => $images_urls,
+        ];
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -44,20 +72,37 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
+
         if ($this->getErrorIfAny($request->all(), $this->ruls)) {
             return $this->getErrorIfAny($request->all(), $this->ruls);
         }
 
-        $stock = new Stock();
-        $stock['store_id'] =  $request['store_id'];
-        $stock['stock_name'] =  $request['stock_name'];
+        if (!$request->hasFile('image_url')) {
+            return response($this->getResponseFail(trans('my_keywords.uploadFileNotFound'), false), 400);
+        }
 
-        $result = $stock->save();
+        $files = $request->file('image_url');
 
-        if ($result) {
-            return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $stock), 200);
+        $number_photos_upload = count($files);
+
+        $pictures_available_upload = $this->getImagesAvailableUpload($files);
+
+        $uploded_files = $this->uploadImages($pictures_available_upload, $request['store_id']);
+
+        $number_images_success_uploded = $uploded_files['number_images_success_uploded'];
+
+        $images_urls = $uploded_files['images_urls'];
+
+        if ($number_images_success_uploded == 0) {
+            return response($this->getResponseFail(trans('my_keywords.invalidFileFormat'), false), 422);
         } else {
-            return response($this->getResponse(__('my_keywords.somethingWrong'), false, null), 422);
+            $data = [
+                'store_id' => (int) $request['store_id'],
+                'number_photos_upload' => $number_photos_upload,
+                'number_images_success_uploded' => $number_images_success_uploded,
+                'images' => $images_urls,
+            ];
+            return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $data), 200);
         }
     }
 
@@ -75,7 +120,7 @@ class StockController extends Controller
             return $this->getErrorIfAny(['id' => $id], $ruls);
         }
 
-        $result = Stock::with(['store'])->find($id);
+        $result = StoreImages::with(['store'])->find($id);
 
         if ($result) {
             return response($this->getResponse(__('my_keywords.operationSuccessfully'), true, $result), 200);
@@ -104,26 +149,7 @@ class StockController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if ($this->getErrorIfAny($request->all(), $this->ruls)) {
-            return $this->getErrorIfAny($request->all(), $this->ruls);
-        }
-
-        $stock = Stock::find($id);
-
-        $result = null;
-
-        if ($stock != null) {
-            $result = $stock->update([
-                'stock_name' =>  $request['stock_name'],
-                'store_id' =>  $request['store_id'],
-            ]);
-        }
-
-        if ($result) {
-            return response($this->getResponseFail(__('my_keywords.operationSuccessfully'), true, $result), 200);
-        } else {
-            return response($this->getResponseFail(__('my_keywords.somethingWrong'), false, null), 422);
-        }
+        //
     }
 
     /**
@@ -140,11 +166,11 @@ class StockController extends Controller
             return $this->getErrorIfAny(['id' => $id], $ruls);
         }
 
-        $stock = Stock::find($id);
+        $store_images = StoreImages::find($id);
         $result = null;
 
-        if ($stock) {
-            $result = $stock->delete();
+        if ($store_images) {
+            $result = $store_images->delete();
         }
 
         if ($result) {

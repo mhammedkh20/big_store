@@ -52,7 +52,7 @@ class Product extends Model
 
     public function ratings()
     {
-        return $this->hasMany(Rating::class, 'product_id', 'id');
+        return $this->hasOne(Rating::class, 'product_id', 'id');
     }
 
     // belongs

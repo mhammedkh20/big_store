@@ -17,9 +17,27 @@ trait GeneralTrait
         return $validator->errors()->first();
     }
 
+    
+    public function getImagesAvailableUpload($files)
+    {
+        $allowedfileExtension = ['jpg', 'png', 'jpeg'];
+        $images = array();
+        $i = 0;
+        foreach ($files as $file) {
+            $extension = $file->getClientOriginalExtension();
+
+            $check = in_array($extension, $allowedfileExtension);
+
+            if ($check) {
+                $images[$i] = $file;
+                $i++;
+            }
+        }
+        return $images;
+    }
 
 
-    public function getResponse($message, $success=true, $data)
+    public function getResponse($message, $success = true, $data)
     {
         return [
             'message' => $message,
@@ -46,7 +64,8 @@ trait GeneralTrait
         ];
     }
 
-    public function getErrorIfAny($data,$ruls){
+    public function getErrorIfAny($data, $ruls)
+    {
 
         $validate = Validator($data, $ruls);
 
@@ -56,6 +75,4 @@ trait GeneralTrait
             return response($this->getResponseFail($message, false), 422);
         }
     }
-
-    
 }

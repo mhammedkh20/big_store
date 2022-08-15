@@ -13,6 +13,8 @@ return [
     'operationSuccessfully' => 'تمت العملية بنجاح !',
     'somethingWrong' => 'حدث خطأ ما !',
     'matchingData' => 'يوجد بيانات متطابة في قاعدة بياناتنا',
+    'uploadFileNotFound' => 'تحميل الملف غير موجود',
+    'invalidFileFormat' => 'تنسيق ملف غير صالح يجب ان يكون png او jpg او jpeg',
 
 
 ];

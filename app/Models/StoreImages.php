@@ -10,9 +10,17 @@ class StoreImages extends Model
 {
     use HasFactory, SoftDeletes;
 
-    
+    public $fillable = [
+        'store_id',
+        'image_url'
+    ];
 
-    public function store(){
-        return $this->belongsTo(Store::class,'store_id','id');
+    public $hidden =[
+        'deleted_at'
+    ];
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id', 'id');
     }
 }

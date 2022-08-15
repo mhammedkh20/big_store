@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('order_id')->constrained('orders');
+            $table->foreignId('user_id')->constrained('users');
             $table->double('rating');
             $table->timestamps();
             $table->softDeletes();

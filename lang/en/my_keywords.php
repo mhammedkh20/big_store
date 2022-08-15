@@ -13,4 +13,6 @@ return [
     'operationSuccessfully' => 'operation accomplished successfully !',
     'somethingWrong' => 'Something went wrong!',
     'matchingData' => 'There is matching data in our database',
+    'uploadFileNotFound' => 'upload file not found',
+    'invalidFileFormat' => 'Invalid file format must be png, jpg or jpeg',
 ];
